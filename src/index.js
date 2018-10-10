@@ -6,6 +6,10 @@ type Query {
   todos: [Todo!]!
 }
 
+type Mutation {
+  createTodo(title: String!): Todo!
+}
+
 type Todo {
   id: ID!
   title: String!
@@ -26,10 +30,24 @@ let todos = [
   },
 ]
 
+let todosCount = todos.length
+
 const resolvers = {
   Query: {
     info: () => 'hoge',
     todos: () => todos,
+  },
+
+  Mutation: {
+    createTodo: (root, args) => {
+      const todo = {
+        id: `todo${todosCount + 1}`,
+        title: args.title,
+        completed: false,
+      }
+      todos.push(todo)
+      return todo
+    },
   },
 
   Todo: {
